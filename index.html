@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Central Med — Felipe Folquenin</title>
+<meta name="description" content="Painel do 2º período de Medicina e a rota até a residência de cirurgia plástica.">
+<meta name="author" content="Felipe Folquenin">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0D6A61" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1513" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Central Med">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<!-- Abertura: o bastão de Asclépio se desenhando. Some sozinho pelo CSS,
+     mesmo que o JavaScript falhe. -->
+<div id="splash" role="presentation">
+  <div class="splash-in">
+    <svg class="asclepio" viewBox="0 0 120 200" aria-hidden="true" focusable="false">
+      <!-- bastão -->
+      <path class="rx staff" pathLength="1" d="M60 20 V180"/>
+      <path class="rx knob" pathLength="1" d="M50 20 H70"/>
+      <path class="rx knob2" pathLength="1" d="M50 180 H70"/>
+      <!-- serpente, de baixo para cima, saindo pela direita -->
+      <path class="rx snake" pathLength="1"
+            d="M52 168 C 30 160, 30 142, 60 136 C 90 130, 90 110, 60 104
+               C 30 98, 30 78, 60 72 C 82 68, 90 60, 82 52"/>
+      <!-- cabeça, livre do bastão -->
+      <circle class="head" cx="84" cy="48" r="7.5"/>
+      <circle class="olho" cx="86.5" cy="45.5" r="1.9"/>
+      <!-- língua bifurcada -->
+      <path class="rx tongue" pathLength="1" d="M90 43 L99 36 M99 36 L105 37 M99 36 L102 31"/>
+    </svg>
+    <p class="splash-nome">Central Med</p>
+    <p class="splash-sig">por Felipe Folquenin</p>
+  </div>
+</div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <line x1="12" y1="8" x2="12" y2="32" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="12" cy="8" r="4" fill="var(--surface)" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="12" cy="20" r="4" fill="currentColor"/>
+        <circle cx="12" cy="32" r="4" fill="var(--surface)" stroke="currentColor" stroke-width="2.4"/>
+        <line x1="19" y1="8" x2="27" y2="8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        <line x1="19" y1="20" x2="33" y2="20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        <line x1="19" y1="32" x2="27" y2="32" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <p class="eyebrow" id="eyebrow">Medicina · Uniguairacá · 2º período · Turma A · 2026/2</p>
+        <h1 id="apptitle">Central do 2º Período</h1>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="themebtn ui" id="theme" type="button" aria-label="Alternar tema">tema</button>
+      <span class="sig">por Felipe Folquenin</span>
+    </div>
+  </div>
+  <div class="segwrap">
+    <div class="seg" role="tablist" aria-label="Seções do app">
+      <button role="tab" class="segbtn" data-view="semestre" aria-selected="true">Semestre</button>
+      <button role="tab" class="segbtn" data-view="agenda" aria-selected="false">Agenda</button>
+      <button role="tab" class="segbtn" data-view="carreira" aria-selected="false">Carreira</button>
+    </div>
+  </div>
+</header>
+
+<nav class="chips" aria-label="Atalhos">
+  <div class="chips-in" id="chips"></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ VIEW: SEMESTRE ============ -->
+<div id="view-semestre" class="view">
+
+  <section id="agora" style="margin-top:0">
+    <div class="strip">
+      <div class="tile alarm" id="t-prova">
+        <h3>Próxima avaliação</h3>
+        <p class="big" id="prova-nome">—</p>
+        <p id="prova-quando">—</p>
+      </div>
+      <div class="tile">
+        <h3>Hoje</h3>
+        <p class="big" id="hoje-data">—</p>
+        <p id="hoje-aulas">—</p>
+      </div>
+      <div class="tile">
+        <h3>Semestre</h3>
+        <p class="big"><span id="sem-pct">—</span></p>
+        <p id="sem-txt">—</p>
+        <div class="bar"><i id="sem-bar" style="width:0%"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="grade">
+    <div class="sechead"><h2>Grade da semana</h2><span>Turma A · Sala 03 (térreo)</span></div>
+    <div class="week" id="week"></div>
+    <p class="note accent"><b>Laboratório de Anatomia — horários livres</b> para os cursos da Saúde: segunda 21:00–22:30, quarta 14:30–17:00 e quinta 21:00–22:30. São 5h30 por semana de peça na mão — é onde Anatomia se aprende de verdade.</p>
+  </section>
+
+  <section id="disciplinas">
+    <div class="sechead"><h2>Disciplinas</h2><span>oito no período · material da pasta</span></div>
+    <div class="discs" id="discs"></div>
+  </section>
+
+  <section id="calendario">
+    <div class="sechead"><h2>Calendário até dezembro</h2><span>datas confirmadas nos cronogramas oficiais</span></div>
+    <ol class="tl" id="tl"></ol>
+  </section>
+
+  <section id="pendencias">
+    <div class="sechead"><h2>O que falta</h2><span>para a central ficar completa</span></div>
+    <div class="gaps">
+      <h3>Informações que só você consegue</h3>
+      <ul id="gaps"></ul>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ VIEW: AGENDA ============ -->
+<div id="view-agenda" class="view" hidden>
+
+  <section id="briefing" style="margin-top:0">
+    <div class="strip">
+      <div class="tile" id="t-hoje-aulas">
+        <h3>Aulas de hoje</h3>
+        <p class="big" id="ag-aulas-n">—</p>
+        <p id="ag-aulas-txt">—</p>
+      </div>
+      <div class="tile" id="t-hoje-tarefas">
+        <h3>Tarefas de hoje</h3>
+        <p class="big" id="ag-tarefas-n">—</p>
+        <p id="ag-tarefas-txt">—</p>
+      </div>
+      <div class="tile" id="t-atrasadas">
+        <h3>Atrasadas</h3>
+        <p class="big" id="ag-atraso-n">—</p>
+        <p id="ag-atraso-txt">—</p>
+      </div>
+    </div>
+
+    <button class="acao" id="btn-briefing" type="button">Gerar briefing de hoje</button>
+
+    <div id="painel-briefing" hidden>
+      <div class="painel-topo">
+        <span class="painel-lbl">Briefing</span>
+        <div class="painel-btns">
+          <button class="mini" id="btn-copiar" type="button">Copiar</button>
+          <button class="mini" id="btn-baixar" type="button">Baixar .txt</button>
+          <button class="mini" id="btn-fechar" type="button">Fechar</button>
+        </div>
+      </div>
+      <pre id="briefing-txt"></pre>
+    </div>
+  </section>
+
+  <section id="nova">
+    <div class="sechead"><h2>Nova tarefa</h2><span id="form-modo">o que precisa ser feito</span></div>
+    <form class="form" id="form-tarefa" autocomplete="off">
+      <input type="hidden" id="f-id" value="">
+      <label class="campo campo-larga">
+        <span>O que</span>
+        <input type="text" id="f-titulo" placeholder="Ler Porto, capítulo 17" maxlength="120" required>
+      </label>
+      <label class="campo">
+        <span>Quando</span>
+        <input type="date" id="f-data">
+      </label>
+      <label class="campo">
+        <span>Disciplina</span>
+        <select id="f-disciplina"></select>
+      </label>
+      <label class="check-alta">
+        <input type="checkbox" id="f-alta">
+        <span>Prioridade alta</span>
+      </label>
+      <div class="form-btns">
+        <button type="submit" class="acao acao-sm" id="btn-salvar">Adicionar</button>
+        <button type="button" class="mini" id="btn-cancelar" hidden>Cancelar</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="lista">
+    <div class="sechead"><h2>Afazeres</h2><span id="lista-resumo">—</span></div>
+    <div id="grupos"></div>
+    <div class="dados">
+      <p>As tarefas ficam salvas neste aparelho, no navegador — não sobem para lugar nenhum. Para levar de um aparelho para outro, exporte aqui e importe lá.</p>
+      <div class="form-btns">
+        <button class="mini" id="btn-exportar" type="button">Exportar</button>
+        <button class="mini" id="btn-importar" type="button">Importar</button>
+        <input type="file" id="f-arquivo" accept="application/json,.json" hidden>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ VIEW: CARREIRA ============ -->
+<div id="view-carreira" class="view" hidden>
+
+  <section id="rota" style="margin-top:0">
+    <div class="strip">
+      <div class="tile">
+        <h3>Formatura</h3>
+        <p class="big" id="c-formatura">—</p>
+        <p id="c-formatura-txt">—</p>
+      </div>
+      <div class="tile">
+        <h3>1ª prova de residência</h3>
+        <p class="big" id="c-prova">—</p>
+        <p id="c-prova-txt">—</p>
+      </div>
+      <div class="tile">
+        <h3>Fase atual</h3>
+        <p class="big" id="c-fase">—</p>
+        <p id="c-fase-txt">—</p>
+      </div>
+    </div>
+    <p class="note"><b>Cirurgia plástica não tem acesso direto.</b> São 2 anos de pré-requisito em cirurgia geral e depois 3 anos de plástica, com uma segunda prova no meio. A cirurgia geral não é o destino — é a plataforma de lançamento.</p>
+  </section>
+
+  <section id="linha">
+    <div class="sechead"><h2>A rota inteira</h2><span>do 2º período ao título de especialista</span></div>
+    <ol class="tl" id="rota-tl"></ol>
+  </section>
+
+  <section id="criterios">
+    <div class="sechead"><h2>Como escolher o serviço</h2><span>seis critérios, em ordem de peso</span></div>
+    <ul class="crit" id="crit"></ul>
+  </section>
+
+  <section id="servicos">
+    <div class="sechead"><h2>Onde fazer cirurgia geral</h2><span>shortlist por cenário</span></div>
+    <div id="servicos-box"></div>
+    <div class="pick">
+      <p class="rank">Alvo principal</p>
+      <h3>HC-UFPR, em Curitiba</h3>
+      <p>É o único arranjo perto de casa com cirurgia geral e plástica sob o mesmo teto — o critério de maior peso. Serviço forte em reconstrução e microcirurgia, e dois anos de convivência com a equipe que decide as vagas de plástica. Entrada pelo ENARE, porque o HC-UFPR é da rede Ebserh.</p>
+    </div>
+    <div class="pick">
+      <p class="rank">Plano paralelo — não alternativo</p>
+      <h3>SUS-SP e ENARE no mesmo ano</h3>
+      <p>Não é escolher entre Paraná e São Paulo: é prestar as duas temporadas. O SUS-SP abre mais de 50 instituições com uma prova só, e o ENARE é nacional. Prestar as três é o comportamento normal de quem passa.</p>
+    </div>
+  </section>
+
+  <section id="provas">
+    <div class="sechead"><h2>Provas e calendário</h2><span>ciclo de referência 2026/2027</span></div>
+    <div class="callout">
+      <p class="lbl">O ENARE, a prova mais importante da lista</p>
+      <p>Exame nacional gerido pela Ebserh: uma inscrição concorre a vagas públicas do país inteiro, mais de 8 mil no ciclo atual. Desde 2025 ele não tem prova própria no acesso direto — usa a nota do <b>ENAMED</b>, aplicado pelo Inep: 100 questões em 5 horas, divididas em partes iguais entre clínica médica, cirurgia geral, pediatria, GO e preventiva. Obrigatório para todo formando, corrigido por TRI numa escala de 0 a 1.000, e a nota <b>vale três anos</b>. Para o segundo degrau, com pré-requisito, o ENARE mantém prova própria da FGV: 80 questões, mínimo de 50% de acertos.</p>
+    </div>
+    <div class="tblwrap">
+      <table id="provas-tbl">
+        <thead><tr><th>Prova</th><th>Abrangência</th><th>Inscrição</th><th>Prova</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note warn"><b>A pegadinha do nome:</b> não existe prova chamada “cirurgia geral” para quem está se formando. Cirurgia geral é <b>acesso direto</b> — todo mundo faz a mesma prova e o que separa é a nota. Na USP o bloco é “Áreas Básicas e de Acesso Direto”, grupos AD1/AD2/AD3 (três versões da mesma prova, o grupo é sorteado). No HC-UFPR chama-se “sem pré-requisito”. O bloco “Especialidades Cirúrgicas” é o dos programas com pré-requisito — lá está a <b>012 – Cirurgia Plástica</b>, sua segunda prova.</p>
+  </section>
+
+  <section id="acoes">
+    <div class="sechead"><h2>O que fazer agora</h2><span>currículo não se recupera depois</span></div>
+    <div class="discs" id="acoes-box"></div>
+  </section>
+
+  <section id="fontes">
+    <div class="sechead"><h2>Onde achar as provas antigas</h2><span>fontes oficiais, com gabarito definitivo</span></div>
+    <ul class="linklist" id="fontes-box"></ul>
+  </section>
+
+</div>
+
+</main>
+
+<footer>
+  <span>Central Med · <strong>por Felipe Folquenin</strong></span>
+  <span class="mono" id="stamp"></span>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
